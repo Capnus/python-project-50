@@ -4,11 +4,21 @@ version = "0.1.0"
 description = "Difference Calculator"
 authors = ["qwerty <Kehsa754@gmail.com>"]
 readme = "README.md"
+packages = [
+  { include = "gendiff" },
+]
+
 
 [tool.poetry.dependencies]
 python = "^3.10"
+[tool.poetry.group.dev.dependencies]
+flake8 = "^7.1.1"
 
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+
+[tool.poetry.scripts]
+gendiff = "gendiff.scripts.gendiff:main"
