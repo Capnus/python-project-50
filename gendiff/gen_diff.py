@@ -13,12 +13,12 @@ def generate_diff(path_to_file1, path_to_file2):
     for keys, values in sorted_dict.items():
         if keys in file1 and keys in file2:
             if file1[keys] == file2[keys]:
-                res += f'  {keys}: {values} \n'
+                res += f'  {keys}: {values}\n'
             else:
-                res += f'- {keys}: {file1[keys]} \n'
-                res += f'+ {keys}: {file2[keys]} \n'
+                res += f'- {keys}: {file1[keys]}\n'
+                res += f'+ {keys}: {file2[keys]}\n'
         if keys in file1 and keys not in file2:
-            res += f'- {keys}: {file1[keys]} \n'
+            res += f'- {keys}: {file1[keys]}\n'
         if keys in file2 and keys not in file1:
-            res += f'+ {keys}: {file2[keys]} \n'
-    return res
+            res += f'+ {keys}: {file2[keys]}\n'
+    return res[:-1]
