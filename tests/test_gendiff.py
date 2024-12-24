@@ -1,5 +1,5 @@
 from pathlib import Path
-
+import yaml
 from gendiff.gendiff import generate_diff
 
 
@@ -12,9 +12,13 @@ def read_file(filename):
 
 
 def test_gendiff():
-    file_1 = get_test_data_path('file1.json')
-    file_2 = get_test_data_path('file2.json')
+    file1_json = get_test_data_path('file1.json')
+    file2_json = get_test_data_path('file2.json')
+    file1_yml = get_test_data_path('file1.yml')
+    file2_yml = get_test_data_path('file2.yml')
     result = read_file('result.txt')
-    diff = generate_diff(file_1, file_2)
+    diff_json = generate_diff(file1_json, file2_json)
+    diff_yml = generate_diff(file1_yml, file2_yml)
 
-    assert result == diff
+    assert result == diff_json
+    assert result == diff_yml

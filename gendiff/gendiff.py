@@ -1,11 +1,20 @@
 import copy
 import json
+from pathlib import Path
+import yaml
 
+
+def parse_file(filename):
+    with open(filename) as file:
+        if Path(filename).suffix == '.yml':
+            return yaml.safe_load(file)
+        elif Path(filename).suffix == '.json':
+            return json.load(file)
+        
 
 def generate_diff(path_to_file1, path_to_file2):
-    with open(path_to_file1) as file_1, open(path_to_file2) as file_2:
-        file1 = json.load(file_1)
-        file2 = json.load(file_2)
+    file1 = parse_file(path_to_file1)
+    file2 = parse_file(path_to_file2)
     copy_file1 = copy.deepcopy(file1)
     copy_file1.update(file2)
     sorted_dict = dict(sorted(copy_file1.items()))
