@@ -1,5 +1,5 @@
 from pathlib import Path
-import yaml
+
 from gendiff.gendiff import generate_diff
 
 
