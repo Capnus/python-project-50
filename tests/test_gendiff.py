@@ -10,8 +10,8 @@ def read_file(filename):
 
 
 def test_gendiff():
-    file_1 = read_file('file1.json')
-    file_2 = read_file('file2.json')
+    file_1 = get_test_data_path('file1.json')
+    file_2 = get_test_data_path('file2.json')
     result = read_file('result.txt')
     diff = generate_diff(file_1, file_2)
 
