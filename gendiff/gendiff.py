@@ -1,4 +1,3 @@
-import copy
 import json
 from pathlib import Path
 
@@ -9,26 +8,32 @@ def parse_file(filename):
     with open(filename) as file:
         if Path(filename).suffix == '.yml':
             return yaml.safe_load(file)
-        elif Path(filename).suffix == '.json':
+        if Path(filename).suffix == '.json':
             return json.load(file)
-        
 
-def generate_diff(path_to_file1, path_to_file2):
-    file1 = parse_file(path_to_file1)
-    file2 = parse_file(path_to_file2)
-    copy_file1 = copy.deepcopy(file1)
-    copy_file1.update(file2)
-    sorted_dict = dict(sorted(copy_file1.items()))
-    res = ''
-    for keys, values in sorted_dict.items():
-        if keys in file1 and keys in file2:
-            if file1[keys] == file2[keys]:
-                res += f'  {keys}: {values}\n'
-            else:
-                res += f'- {keys}: {file1[keys]}\n'
-                res += f'+ {keys}: {file2[keys]}\n'
-        if keys in file1 and keys not in file2:
-            res += f'- {keys}: {file1[keys]}\n'
-        if keys in file2 and keys not in file1:
-            res += f'+ {keys}: {file2[keys]}\n'
-    return res[:-1]
+
+def build_diff(data1, data2):
+    diff = []
+    keys = sorted(data1.keys() | data2.keys())  
+
+    for key in keys:
+        if key not in data1:
+            diff.append({"key": key, "type": "added", "value": data2[key]})
+        elif key not in data2:
+            diff.append({"key": key, "type": "removed", "value": data1[key]})
+        elif isinstance(data1[key], dict) and isinstance(data2[key], dict):
+            diff.append({
+                "key": key,
+                "type": "nested",
+                "children": build_diff(data1[key], data2[key])
+            })
+        elif data1[key] == data2[key]:
+            diff.append({"key": key, "type": "unchanged", "value": data1[key]})
+        else:
+            diff.append({
+                "key": key,
+                "type": "changed",
+                "old_value": data1[key],
+                "new_value": data2[key]
+            })
+    return diff
