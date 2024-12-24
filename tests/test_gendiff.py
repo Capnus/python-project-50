@@ -1,5 +1,7 @@
 from pathlib import Path
+
 from gendiff.gendiff import generate_diff
+
 
 def get_test_data_path(filename):
     return Path(__file__).parent / 'test_data' / filename
