@@ -8,13 +8,18 @@ def format_plain(diff, path=""):
 
         if type_ == "added":
             value = format_value_plain(item["value"])
-            lines.append(f"Property '{full_path}' was added with value: {value}")
+            lines.append(
+                f"Property '{full_path}' was added with value: {value}"
+                )
         elif type_ == "removed":
             lines.append(f"Property '{full_path}' was removed")
         elif type_ == "changed":
             old_value = format_value_plain(item["old_value"])
             new_value = format_value_plain(item["new_value"])
-            lines.append(f"Property '{full_path}' was updated. From {old_value} to {new_value}")
+            lines.append(
+                f"Property '{full_path}' was updated. "
+                f"From {old_value} to {new_value}"
+                )
         elif type_ == "nested":
             lines.append(format_plain(item["children"], full_path))
 

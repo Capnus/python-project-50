@@ -1,9 +1,10 @@
 import argparse
 
 from gendiff.gendiff import build_diff, parse_file
+from gendiff.json import format_json
 from gendiff.plain import format_plain
 from gendiff.stylish import format_stylish
-from gendiff.json import format_json
+
 
 def main():
     parser = argparse.ArgumentParser(
@@ -11,10 +12,13 @@ def main():
     )
     parser.add_argument("first_file")
     parser.add_argument("second_file")
-    parser.add_argument('-f', '--format', help='set format of output', default='stylish', choices=['stylish', 'plain', 'json'])
+    parser.add_argument('-f', '--format', help='set format of output', 
+                        default='stylish', choices=['stylish', 'plain', 'json']
+                        )
     args = parser.parse_args()
 
-    diff = (build_diff(parse_file(args.first_file), parse_file(args.second_file)))
+    diff = (build_diff(parse_file(args.first_file), 
+                       parse_file(args.second_file)))
 
     if args.format == 'stylish':
         print(format_stylish(diff))
