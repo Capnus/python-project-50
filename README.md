@@ -5,15 +5,27 @@
 
 Project is about finding difference between files using cli tools
 
-## Start and delete
+
+## install:
+
+make install
+
+## build:
+
+make build
+
+## package install:
+
+make package-install
+
+## usage:
+
+gendiff [options] <file_path1> <file_path2>
 
 **How to run script with instructions:**
 
 `gendiff -h`
 
-**How to run script with default settings:**
-
-`gendiff <file_path1> <file_path2>`
 
 **To remove project just run `rm -rf .`**
 

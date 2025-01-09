@@ -1,42 +1,52 @@
-def format_stylish(diff, depth=1):
-    result = []
-    indent = " " * (depth * 4 - 2)  
-    for item in diff:
-        key = item["key"]
-        type_ = item["type"]
-        if type_ == "added":
-            result.append(
-                f"{indent}+ {key}: {format_value(item['value'], depth)}"
+INDENT_SIZE = 4
+INDENT_OFFSET = 2
+
+
+def format_stylish(diff):
+    def inner_format(diff, depth=1):
+        result = []
+        indent = " " * (depth * INDENT_SIZE - INDENT_OFFSET)
+        for item in diff:
+            key = item["key"]
+            type_ = item["type"]
+            if type_ == "added":
+                result.append(
+                    f"{indent}+ {key}: {format_value(item['value'], depth)}"
                 )
-        elif type_ == "removed":
-            result.append(
-                f"{indent}- {key}: {format_value(item['value'], depth)}"
+            elif type_ == "removed":
+                result.append(
+                    f"{indent}- {key}: {format_value(item['value'], depth)}"
                 )
-        elif type_ == "unchanged":
-            result.append(
-                f"{indent}  {key}: {format_value(item['value'], depth)}"
+            elif type_ == "unchanged":
+                result.append(
+                    f"{indent}  {key}: {format_value(item['value'], depth)}"
                 )
-        elif type_ == "changed":
-            result.append(
-                f"{indent}- {key}: {format_value(item['old_value'], depth)}"
+            elif type_ == "changed":
+                result.append(
+                    f"{indent}- {key}: {format_value(item['old_value'], depth)}"
                 )
-            result.append(
-                f"{indent}+ {key}: {format_value(item['new_value'], depth)}"
+                result.append(
+                    f"{indent}+ {key}: {format_value(item['new_value'], depth)}"
                 )
-        elif type_ == "nested":
-            children = format_stylish(item["children"], depth + 1)
-            result.append(f"{indent}  {key}: {{\n{children}\n{indent}  }}")
-    return "\n".join(result)
+            elif type_ == "nested":
+                children = inner_format(item["children"], depth + 1)
+                result.append(f"{indent}  {key}: {{\n{children}\n{indent}  }}")
+        return "\n".join(result)
+
+    return inner_format(diff)
 
 
 def format_value(value, depth):
     if isinstance(value, dict):
-        indent = " " * (depth * 4)
-        lines = [f"{indent}{k}: {format_value(v, depth + 1)}" 
+        indent = " " * (depth * INDENT_SIZE)
+        lines = [f"{indent}{k}: {format_value(v, depth + 1)}"
                  for k, v in value.items()]
-        return f"{{\n{'\n'.join(lines)}\n{' ' * ((depth - 1) * 4)}}}"  
-    if isinstance(value, bool):  
+        return f"{{\n{'\n'.join(lines)}\n{' ' * ((depth - 1) * INDENT_SIZE)}}}"
+    if isinstance(value, bool):
         return str(value).lower()
-    if value is None:  
+    if value is None:
         return "null"
+    if isinstance(value, (list, tuple)):
+        items = [format_value(item, depth + 1) for item in value]
+        return f"[{', '.join(items)}]"
     return str(value)
