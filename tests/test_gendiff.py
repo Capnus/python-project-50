@@ -7,7 +7,7 @@ from gendiff.stylish import format_stylish
 
 
 def get_test_data_path(filename):
-    return Path('tests/tefdfdfst_data') / filename
+    return Path('tests/test_data') / filename
 
 
 def read_file(filename):
