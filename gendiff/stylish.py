@@ -33,7 +33,7 @@ def format_stylish(diff):
                 result.append(f"{indent}  {key}: {{\n{children}\n{indent}  }}")
         return "\n".join(result)
 
-    return inner_format(diff)
+    return "{\n" + inner_format(diff)[4:] + "\n}"
 
 
 def format_value(value, depth):
@@ -41,7 +41,7 @@ def format_value(value, depth):
         indent = " " * (depth * INDENT_SIZE)
         lines = [f"{indent}{k}: {format_value(v, depth + 1)}"
                  for k, v in value.items()]
-        return f"{{\n{'\n'.join(lines)}\n{' ' * ((depth - 1) * INDENT_SIZE)}}}"
+        return f"{{\n{'\n'.join(lines)}\n{indent[:-INDENT_OFFSET]}}}"
     if isinstance(value, bool):
         return str(value).lower()
     if value is None:
