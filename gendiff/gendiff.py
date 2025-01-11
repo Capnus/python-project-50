@@ -52,9 +52,7 @@ def build_diff(data1, data2):
     return diff
 
 
-def generate_diff(first_file, second_file):
-    args = parse_args()
-    format_type = args.format
+def generate_diff(first_file, second_file, format_type='stylish'):
     diff = build_diff(parse_file(first_file), parse_file(second_file))
 
     if format_type == 'stylish':
