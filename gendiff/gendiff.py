@@ -1,15 +1,27 @@
 import json
-from pathlib import Path
-
 import yaml
+from pathlib import Path
+from json import format_json
+from plain import format_plain
+from stylish import format_stylish
+
+
+def read_file(filename):
+    with open(filename, 'r') as file:
+        return file.read()
+
+
+def parse_content(content, file_format):
+    if file_format == '.yml':
+        return yaml.safe_load(content)
+    elif file_format == '.json':
+        return json.loads(content)
 
 
 def parse_file(filename):
-    with open(filename) as file:
-        if Path(filename).suffix == '.yml':
-            return yaml.safe_load(file)
-        if Path(filename).suffix == '.json':
-            return json.load(file)
+    content = read_file(filename)
+    file_format = Path(filename).suffix
+    return parse_content(content, file_format)
 
 
 def build_diff(data1, data2):
@@ -37,3 +49,14 @@ def build_diff(data1, data2):
                 "new_value": data2[key]
             })
     return diff
+
+
+def generate_diff(first_file, second_file, format_type):
+    diff = build_diff(parse_file(first_file), parse_file(second_file))
+
+    if format_type == 'stylish':
+        return format_stylish(diff)
+    elif format_type == 'plain':
+        return format_plain(diff)
+    elif format_type == 'json':
+        return format_json(diff)
