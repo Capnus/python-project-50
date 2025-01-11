@@ -1,5 +1,7 @@
-import pytest
 from pathlib import Path
+
+import pytest
+
 from gendiff.gendiff import build_diff, parse_file
 from gendiff.json import format_json
 from gendiff.plain import format_plain
@@ -25,8 +27,6 @@ def read_file(filename):
         ('file1.yml', 'file2.yml', 'result_json.txt', format_json),
     ]
 )
-
-
 def test_gendiff(file1, file2, result_file, formatter):
     file1_path = get_test_data_path(file1)
     file2_path = get_test_data_path(file2)

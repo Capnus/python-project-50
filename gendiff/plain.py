@@ -1,6 +1,5 @@
 def format_plain(diff):
 
-
     def inner_format(diff, path=""):
         lines = []
         for item in diff:
