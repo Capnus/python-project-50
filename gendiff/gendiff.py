@@ -4,6 +4,7 @@ from pathlib import Path
 from gendiff.json import format_json
 from gendiff.plain import format_plain
 from gendiff.stylish import format_stylish
+from gendiff.cli import parse_args
 
 
 def read_file(filename):
@@ -51,7 +52,9 @@ def build_diff(data1, data2):
     return diff
 
 
-def generate_diff(first_file, second_file, format_type):
+def generate_diff(first_file, second_file):
+    args = parse_args()
+    format_type = args.format
     diff = build_diff(parse_file(first_file), parse_file(second_file))
 
     if format_type == 'stylish':
