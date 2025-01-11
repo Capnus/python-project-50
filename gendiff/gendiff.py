@@ -4,7 +4,7 @@ from pathlib import Path
 from gendiff.json import format_json
 from gendiff.plain import format_plain
 from gendiff.stylish import format_stylish
-<<<<<<< HEAD
+
 
 def read_file_content(filename):
     with open(filename, 'r') as file:
@@ -16,33 +16,13 @@ def parse_content(content, file_extension):
     if file_extension == '.yml' or file_extension == '.yaml':
         return yaml.safe_load(content)
     elif file_extension == '.json':
-=======
-from gendiff.cli import parse_args
-
-
-def read_file(filename):
-    with open(filename, 'r') as file:
-        return file.read()
-
-
-def parse_content(content, file_format):
-    if file_format == '.yml':
-        return yaml.safe_load(content)
-    elif file_format == '.json':
->>>>>>> 18d89392f3be05214cf82c050f886f2099efb52a
         return json.loads(content)
 
 
 def parse_file(filename):
-<<<<<<< HEAD
     content = read_file_content(filename)
     file_extension = Path(filename).suffix
     return parse_content(content, file_extension)
-=======
-    content = read_file(filename)
-    file_format = Path(filename).suffix
-    return parse_content(content, file_format)
->>>>>>> 18d89392f3be05214cf82c050f886f2099efb52a
 
 
 def build_diff(data1, data2):
@@ -70,20 +50,11 @@ def build_diff(data1, data2):
                 'value': data2[key]
             }
         else:
-<<<<<<< HEAD
             diff[key] = {
                 'status': 'changed',
                 'old_value': data1[key],
                 'new_value': data2[key]
             }
-=======
-            diff.append({
-                "key": key,
-                "type": "changed",
-                "old_value": data1[key],
-                "new_value": data2[key]
-            })
->>>>>>> 18d89392f3be05214cf82c050f886f2099efb52a
     return diff
 
 
