@@ -1,9 +1,9 @@
 import json
 import yaml
 from pathlib import Path
-from json import format_json
-from plain import format_plain
-from stylish import format_stylish
+from gendiff.json import format_json
+from gendiff.plain import format_plain
+from gendiff.stylish import format_stylish
 
 
 def read_file(filename):
