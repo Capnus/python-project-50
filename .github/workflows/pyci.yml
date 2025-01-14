@@ -26,6 +26,9 @@ jobs:
         if: github.ref_name == 'main'
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-        with:
-          coverageCommand: make test-coverage
-          debug: true
+          run: |
+          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > cc-reporter
+          chmod +x cc-reporter
+          ./cc-reporter before-build
+          ./cc-reporter format-coverage coverage.xml --input-type coverage.py
+          ./cc-reporter upload-coverage
