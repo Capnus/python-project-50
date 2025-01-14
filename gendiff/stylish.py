@@ -14,18 +14,29 @@ def format_stylish(diff):
             if isinstance(value, dict) and "status" in value:
                 status = value.get("status")
                 if status == "added":
-                    lines.append(f"{space}+ {key}: {walk(value['value'], depth + 1)}")
+                    lines.append(
+                        f"{space}+ {key}: {walk(value['value'], depth + 1)}"
+                    )
                 elif status == "removed":
-                    lines.append(f"{space}- {key}: {walk(value['value'], depth + 1)}")
+                    lines.append(
+                        f"{space}- {key}: {walk(value['value'], depth + 1)}"
+                    )
                 elif status == "unchanged":
-                    lines.append(f"{space}  {key}: {walk(value['value'], depth + 1)}")
+                    lines.append(
+                        f"{space}  {key}: {walk(value['value'], depth + 1)}"
+                    )
                 elif status == "changed":
-                    lines.append(f"{space}- {key}: {walk(value['old_value'], depth + 1)}")
-                    lines.append(f"{space}+ {key}: {walk(value['new_value'], depth + 1)}")
+                    lines.append(
+                        f"{space}- {key}: {walk(value['old_value'], depth + 1)}"
+                    )
+                    lines.append(
+                        f"{space}+ {key}: {walk(value['new_value'], depth + 1)}"
+                    )
             else:
                 lines.append(f"{space}  {key}: {walk(value, depth + 1)}")
 
-        result = "{\n" + "\n".join(lines) + "\n" + " " * (INDENT_SIZE * (depth - 1)) + "}"
+        closing_indent = (INDENT_SIZE * (depth - 1))
+        result = "{\n" + "\n".join(lines) + "\n" + " " * closing_indent + "}"
         return result
 
     def format_value(value):
@@ -34,8 +45,8 @@ def format_stylish(diff):
         elif value is None:
             return "null"
         elif isinstance(value, bool):
-            return str(value).lower().rstrip(' ')
+            return str(value).lower()
         else:
-            return str(value).rstrip(' ')
+            return str(value)
 
     return walk(diff, 1)  

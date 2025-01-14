@@ -5,13 +5,19 @@ def format_plain(diff, parent_key=''):
         status = value.get('status')
 
         if status == 'added':
-            lines.append(f"Property '{current_key}' was added with value: {format_value(value['value'])}")
+            lines.append(
+                f"Property '{current_key}' was added with "
+                f"value: {format_value(value['value'])}"
+            )
         elif status == 'removed':
             lines.append(f"Property '{current_key}' was removed")
         elif status == 'changed':
             old_value = format_value(value['old_value'])
             new_value = format_value(value['new_value'])
-            lines.append(f"Property '{current_key}' was updated. From {old_value} to {new_value}")
+            lines.append(
+                f"Property '{current_key}' was updated. "
+                f"From {old_value} to {new_value}"
+            )
         elif status == 'unchanged' and isinstance(value['value'], dict):
             lines.append(format_plain(value['value'], current_key))
 
