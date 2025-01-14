@@ -2,10 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from gendiff.gendiff import build_diff, parse_file
-from gendiff.json import format_json
-from gendiff.plain import format_plain
-from gendiff.stylish import format_stylish
+from gendiff.gendiff import generate_diff
 
 
 def get_test_data_path(filename):
@@ -13,25 +10,32 @@ def get_test_data_path(filename):
 
 
 def read_file(filename):
-    return get_test_data_path(filename).read_text()
+    path = get_test_data_path(filename)
+    return path.read_text()
 
 
 @pytest.mark.parametrize(
-    "file1, file2, result_file, formatter",
+    "file1, file2, result_file, format_name",
     [
-        ('file1.json', 'file2.json', 'result_plain.txt', format_plain),
-        ('file1.yml', 'file2.yml', 'result_plain.txt', format_plain),
-        ('file1.json', 'file2.json', 'result.txt', format_stylish),
-        ('file1.yml', 'file2.yml', 'result.txt', format_stylish),
-        ('file1.json', 'file2.json', 'result_json.txt', format_json),
-        ('file1.yml', 'file2.yml', 'result_json.txt', format_json),
+        ('file1.json', 'file2.json', 'result.txt', 'stylish'),
+        ('file1.yml', 'file2.yml', 'result.txt', 'stylish'),
+        ('file1.json', 'file2.json', 'result_plain.txt', 'plain'),
+        ('file1.yml', 'file2.yml', 'result_plain.txt', 'plain'),
+        ('file1.json', 'file2.json', 'result_json.txt', 'json'),
+        ('file1.yml', 'file2.yml', 'result_json.txt', 'json'),
+    ],
+    ids=[
+        "json_stylish", "yaml_stylish", 
+        "json_plain", "yaml_plain", 
+        "json_json", "yaml_json", 
     ]
 )
-def test_gendiff(file1, file2, result_file, formatter):
+def test_generate_diff(file1, file2, result_file, format_name):
     file1_path = get_test_data_path(file1)
     file2_path = get_test_data_path(file2)
-    result = read_file(result_file)
 
-    diff = formatter(build_diff(parse_file(file1_path), parse_file(file2_path)))
+    expected_result = read_file(result_file)
 
-    assert result == diff
+    diff = generate_diff(file1_path, file2_path, format_name)
+
+    assert expected_result == diff
