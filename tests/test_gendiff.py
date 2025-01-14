@@ -30,8 +30,6 @@ def read_file(filename):
         "json_json", "yaml_json", 
     ]
 )
-
-
 def test_generate_diff(file1, file2, result_file, format_name):
     file1_path = get_test_data_path(file1)
     file2_path = get_test_data_path(file2)
