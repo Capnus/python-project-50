@@ -8,7 +8,7 @@ test:
 	uv run pytest
 
 test-coverage:
-	uv run pytest --cov ./tests
+	uv run pytest --cov ./tests --cov-report xml
 
 lint:
 	uv run ruff check
