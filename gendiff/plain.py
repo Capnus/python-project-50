@@ -1,41 +1,33 @@
-def format_plain(diff):
+def format_plain(diff, parent_key=''):
+    lines = []
+    for key, value in diff.items():
+        current_key = f"{parent_key}.{key}" if parent_key else key
+        status = value.get('status')
 
-    def inner_format(diff, path=""):
-        lines = []
-        for item in diff:
-            key = item["key"]
-            full_path = f"{path}.{key}" if path else key
-            diff_type = item["type"]
+        if status == 'added':
+            lines.append(f"Property '{current_key}' was added with value: {format_value(value['value'])}")
+        elif status == 'removed':
+            lines.append(f"Property '{current_key}' was removed")
+        elif status == 'changed':
+            old_value = format_value(value['old_value'])
+            new_value = format_value(value['new_value'])
+            lines.append(f"Property '{current_key}' was updated. From {old_value} to {new_value}")
+        elif status == 'unchanged' and isinstance(value['value'], dict):
+            lines.append(format_plain(value['value'], current_key))
 
-            if diff_type == "added":
-                value = format_value_plain(item["value"])
-                lines.append(
-                    f"Property '{full_path}' was added with value: {value}"
-                )
-            elif diff_type == "removed":
-                lines.append(f"Property '{full_path}' was removed")
-            elif diff_type == "changed":
-                old_value = format_value_plain(item["old_value"])
-                new_value = format_value_plain(item["new_value"])
-                lines.append(
-                    f"Property '{full_path}' was updated. "
-                    f"From {old_value} to {new_value}"
-                )
-            elif diff_type == "nested":
-                lines.append(inner_format(item["children"], full_path))
-
-        return "\n".join(lines)
-
-    return inner_format(diff)
+    return '\n'.join(lines)
 
 
-def format_value_plain(value):
-    if isinstance(value, (dict, list, tuple)):
-        return "[complex value]"
-    if isinstance(value, bool):
-        return str(value).lower()
-    if value is None:
-        return "null"
-    if isinstance(value, str):
+def format_value(value):
+    if isinstance(value, dict):
+        return '[complex value]'
+    elif isinstance(value, str):
         return f"'{value}'"
-    return str(value)
+    elif value is None:
+        return 'null'
+    elif isinstance(value, bool):
+        return str(value).lower()
+    elif isinstance(value, (int, float)):
+        return str(value)
+    else:
+        return '[complex value]'

@@ -1,50 +1,41 @@
-INDENT_SIZE = 4
-INDENT_OFFSET = 2
-
-
 def format_stylish(diff):
-    def inner_format(diff, depth=1):
-        result = []
-        indent = " " * (depth * INDENT_SIZE - INDENT_OFFSET)
-        for item in diff:
-            key = item["key"]
-            type_ = item["type"]
-            if type_ == "added":
-                result.append(
-                    f"{indent}+ {key}: {format_value(item['value'], depth)}"
-                )
-            elif type_ == "removed":
-                result.append(
-                    f"{indent}- {key}: {format_value(item['value'], depth)}"
-                )
-            elif type_ == "unchanged":
-                result.append(
-                    f"{indent}  {key}: {format_value(item['value'], depth)}"
-                )
-            elif type_ == "changed":
-                result.append(
-                    f"{indent}- {key}: {format_value(item['old_value'], depth)}"
-                )
-                result.append(
-                    f"{indent}+ {key}: {format_value(item['new_value'], depth)}"
-                )
-            elif type_ == "nested":
-                children = inner_format(item["children"], depth + 1)
-                result.append(f"{indent}  {key}: {{\n{children}\n{indent}  }}")
-        return "\n".join(result)
+    INDENT_SIZE = 4
+    INDENT_OFFSET = 2
 
-    return "{\n" + inner_format(diff) + "\n}"
+    def walk(node, depth):
 
+        space = " " * (INDENT_SIZE * depth - INDENT_OFFSET)  
+        lines = []
 
-def format_value(value, depth):
-    if isinstance(value, dict):
-        indent = " " * (depth * INDENT_SIZE)
-        lines = [f"{indent}{k}: {format_value(v, depth + 1)}"
-                 for k, v in value.items()]
-        return f"{{\n{'\n'.join(lines)}\n{indent[:-INDENT_OFFSET]}}}"
-    if isinstance(value, bool):
-        return str(value).lower()
-    if value is None:
-        return "null"
-    return str(value)
-  
+        if not isinstance(node, dict):
+            return format_value(node)  
+
+        for key, value in node.items():
+            if isinstance(value, dict) and "status" in value:
+                status = value.get("status")
+                if status == "added":
+                    lines.append(f"{space}+ {key}: {walk(value['value'], depth + 1)}")
+                elif status == "removed":
+                    lines.append(f"{space}- {key}: {walk(value['value'], depth + 1)}")
+                elif status == "unchanged":
+                    lines.append(f"{space}  {key}: {walk(value['value'], depth + 1)}")
+                elif status == "changed":
+                    lines.append(f"{space}- {key}: {walk(value['old_value'], depth + 1)}")
+                    lines.append(f"{space}+ {key}: {walk(value['new_value'], depth + 1)}")
+            else:
+                lines.append(f"{space}  {key}: {walk(value, depth + 1)}")
+
+        result = "{\n" + "\n".join(lines) + "\n" + " " * (INDENT_SIZE * (depth - 1)) + "}"
+        return result
+
+    def format_value(value):
+        if isinstance(value, dict):
+            return walk(value, 1)  
+        elif value is None:
+            return "null"
+        elif isinstance(value, bool):
+            return str(value).lower().rstrip(' ')
+        else:
+            return str(value).rstrip(' ')
+
+    return walk(diff, 1)  

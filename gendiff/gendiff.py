@@ -1,6 +1,8 @@
 import json
-import yaml
 from pathlib import Path
+
+import yaml
+
 from gendiff.json import format_json
 from gendiff.plain import format_plain
 from gendiff.stylish import format_stylish
@@ -9,6 +11,7 @@ from gendiff.stylish import format_stylish
 def read_file_content(filename):
     with open(filename, 'r') as file:
         return file.read()
+
 
 def parse_content(content, file_extension):
     file_extension = file_extension.lower()  
