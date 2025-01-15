@@ -20,19 +20,19 @@ Project is about finding difference between files using cli tools
 
 ## usage:
 
-# Show help:
+## Show help:
     
 `gendiff -h`
 
-# Compare two files (default: stylish format):
+## Compare two files (default: stylish format):
 
 `gendiff file1.json file2.json`
 
-# Compare two files in plain format:
+## Compare two files in plain format:
 
 `gendiff --format plain file1.yml file2.yml`
 
-# Compare two files in JSON format:
+## Compare two files in JSON format:
 
 `gendiff --format json file1.json file2.json`
 
