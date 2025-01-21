@@ -1,5 +1,7 @@
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/Capnus/python-project-50/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/Capnus/python-project-50/actions)
+[![Maintainability](https://api.codeclimate.com/v1/badges/49b7c9b6bf31f10a8792/maintainability)](https://codeclimate.com/github/Capnus/python-project-50/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/49b7c9b6bf31f10a8792/test_coverage)](https://codeclimate.com/github/Capnus/python-project-50/test_coverage)
 
 # Description:
 
